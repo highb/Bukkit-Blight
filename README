@@ -1,1 +1,21 @@
+= Bukkit-Blight
+
+== DESCRIPTION
 Bukkit-Blight is a Bukkit plugin for Minecraft that creates a user-configurable blight upon the land!
+
+== INSTALLATION
+1. Install Bukkit (http://wiki.bukkit.org/Setting_up_a_server)
+1. Download blight.jar
+1. Place blight.jar in Bukkit /plugins directory
+1. Start or reload your server
+
+== USAGE
+<b>BACK UP YOUR WORLD!</b> This mod behaves in unpredictable and destructive ways. It would be a pity to lose anything you care about.
+
+To give yourself permissions to start a blight, either become an op (Bukkit server console: /op your_character_name) or give yourself the blight permission.
+
+To start a blight: Enter /blight in the console. The blight will spread from any block where you have done this.
+
+== TODO
+* Add /blight commands to set config file values in game
+* Allow way of disabling the blight
