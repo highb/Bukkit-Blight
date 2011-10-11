@@ -1,10 +1,5 @@
 package com.dasboogles.blight;
 
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.io.ObjectInputStream;
-import java.io.ObjectOutputStream;
-import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Random;
 import java.util.logging.Logger;
@@ -13,12 +8,8 @@ import org.bukkit.Material;
 import org.bukkit.block.Block;
 import org.bukkit.block.BlockFace;
 
-public class Blight implements Runnable, Serializable {
-	/**
-	 * 
-	 */
-	private static final long serialVersionUID = 1L;
-	private final ArrayList<Block> activeBlightBlocks = new ArrayList<Block>();
+public class Blight implements Runnable {
+	private ArrayList<Block> activeBlightBlocks = new ArrayList<Block>();
 	private Logger log = Logger.getLogger("minecraft");
 	private Random rand = new Random();
 	public ArrayList<BlockFace> faces = new ArrayList<BlockFace>();
@@ -115,11 +106,11 @@ public class Blight implements Runnable, Serializable {
 		advanceBlight();
 	}
 	
-	public boolean saveToDisk(String filename) {
+	public boolean saveLocationsToDisk(String filename) {
 		return false;
 	}
 	
-	public boolean restoreFromDisk(String filename) {
+	public boolean restoreLocationsFromDisk(String filename) {
 		return false;
 	}
 }

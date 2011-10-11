@@ -66,7 +66,8 @@ public class BlightPlugin extends JavaPlugin {
 	    	CONFIG = getConfiguration();
 	    	String includedMaterials = CONFIG.getString("included", "" + Material.DIRT.toString() + "," 
 	    			+ Material.GRASS.toString() + "," 
-	    			+ Material.WOOD.toString());
+	    			+ Material.WOOD.toString() + ","
+	    			+ Material.AIR.toString());
 	    	String infectableFaces = CONFIG.getString("infectableFaces", "" + BlockFace.NORTH 
 	    			+ "," + BlockFace.EAST 
 	    			+ "," + BlockFace.SOUTH 
@@ -77,10 +78,11 @@ public class BlightPlugin extends JavaPlugin {
 	    			+ "," + BlockFace.NORTH_WEST
 	    			+ "," + BlockFace.SOUTH_EAST
 	    			+ "," + BlockFace.SOUTH_WEST);
-	    	String infectedBlockString = CONFIG.getString("infectedBlockMaterial", Material.SPONGE.toString());
+	    	String infectedBlockString = CONFIG.getString("infectedBlockMaterial", Material.NETHERRACK.toString());
 	    	String exhaustedBlockString = CONFIG.getString("exhaustedBlockMaterial", Material.NETHERRACK.toString());
 	    	int maximumActiveBlocksCap = CONFIG.getInt("maximumActiveBlocksCap", 10);
 	    	int infectionProbability = CONFIG.getInt("infectionProbability", 50);
+	    	int infectionFrequency = CONFIG.getInt("infectionFrequency", 200);
 	    	CONFIG.save();
 	    	
 	    	blight = new Blight(includedMaterials, infectableFaces, infectedBlockString,
@@ -95,8 +97,7 @@ public class BlightPlugin extends JavaPlugin {
 	        pm.registerEvent(Event.Type.BLOCK_CANBUILD, blockListener, Priority.Normal, this);
 
 	        BukkitScheduler scheduler = getServer().getScheduler();
-	        //scheduler.scheduleSyncRepeatingTask(this, blight, 1, 1000);
-	        
+	        scheduler.scheduleSyncRepeatingTask(this, blight, 1, infectionFrequency);
 	        
 	        // Register our commands
 	        getCommand("blight").setExecutor(new BlightCommand(this));
@@ -104,41 +105,5 @@ public class BlightPlugin extends JavaPlugin {
 	        // EXAMPLE: Custom code, here we just output some info so we can check all is well
 	        PluginDescriptionFile pdfFile = this.getDescription();
 	        log.info( pdfFile.getName() + " version " + pdfFile.getVersion() + " is enabled!" );
-	    }
-	    
-		private boolean saveBlightToDisk(String filename) {
-		    try {
-		    	FileOutputStream blightFile = new FileOutputStream(filename);
-		    	ObjectOutputStream out = new ObjectOutputStream(blightFile);
-		    	out.writeObject(blight);
-		    	out.close();
-		    	return true;
-		    }
-		    catch(IOException exception) {
-		    	exception.printStackTrace();
-		    	return false;
-		    }
-		}
-	    
-	    private boolean restoreBlightFromDisk(String filename) {
-	    	try {
-				FileInputStream blightFileInput = new FileInputStream(filename);
-				ObjectInputStream in = new ObjectInputStream(blightFileInput);
-				blight = (Blight) in.readObject();
-				return true;
-			} catch (FileNotFoundException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-				return false;
-			} catch (IOException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-				return false;
-			} catch (ClassNotFoundException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-				return false;
-			}
-	    	
 	    }
 }
