@@ -3,12 +3,6 @@ main: com.dasboogles.blight.BlightPlugin
 version: 0.0.1
 
 commands:
-    pos:
-        description: blah
-        usage: /pos
-    debug:
-        description: blah blah
-        usage: /debug
     blight:
         description: Unleash a blight upon your world!
         usage: /blight
