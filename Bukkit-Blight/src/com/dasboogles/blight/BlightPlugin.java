@@ -12,6 +12,7 @@ import java.util.logging.Logger;
 
 import org.bukkit.Material;
 import org.bukkit.block.Block;
+import org.bukkit.block.BlockFace;
 import org.bukkit.entity.Player;
 import org.bukkit.event.Event.Priority;
 import org.bukkit.event.Event;
@@ -63,38 +64,27 @@ public class BlightPlugin extends JavaPlugin {
 	        // TODO: Place any custom enable code here including the registration of any events
 	    	// Setup config
 	    	CONFIG = getConfiguration();
-	    	String includedMaterials = CONFIG.getString("included", "" + Material.DIRT.toString() + "," + Material.GRASS.toString() + "," + Material.WOOD.toString());
+	    	String includedMaterials = CONFIG.getString("included", "" + Material.DIRT.toString() + "," 
+	    			+ Material.GRASS.toString() + "," 
+	    			+ Material.WOOD.toString());
+	    	String infectableFaces = CONFIG.getString("infectableFaces", "" + BlockFace.NORTH 
+	    			+ "," + BlockFace.EAST 
+	    			+ "," + BlockFace.SOUTH 
+	    			+ "," + BlockFace.WEST 
+	    			+ "," + BlockFace.DOWN 
+	    			+ "," + BlockFace.UP
+	    			+ "," + BlockFace.NORTH_EAST
+	    			+ "," + BlockFace.NORTH_WEST
+	    			+ "," + BlockFace.SOUTH_EAST
+	    			+ "," + BlockFace.SOUTH_WEST);
 	    	String infectedBlockString = CONFIG.getString("infectedBlockMaterial", Material.SPONGE.toString());
 	    	String exhaustedBlockString = CONFIG.getString("exhaustedBlockMaterial", Material.NETHERRACK.toString());
 	    	int maximumActiveBlocksCap = CONFIG.getInt("maximumActiveBlocksCap", 10);
 	    	int infectionProbability = CONFIG.getInt("infectionProbability", 50);
 	    	CONFIG.save();
 	    	
-	    	blight = new Blight();
-	    	
-	    	String[] includedMaterialsArray = includedMaterials.split(",");
-	    	for(String matString : includedMaterialsArray) {
-    			Material materialToAdd = Material.getMaterial(matString.toUpperCase());
-    			if(materialToAdd != null) {
-    				blight.includedList.add(materialToAdd);
-    			}
-    			else {
-    				log.warning("Blight: Material name " + matString + " provided in config file was invalid. Check that it exists in the list here: http://jd.bukkit.org/apidocs/org/bukkit/Material.html");
-    			}
-	    	}
-	    	
-	    	Material infectedBlockMaterial = Material.getMaterial(infectedBlockString);
-	    	if(infectedBlockMaterial != null) {
-	    		blight.infectedBlockMaterial = infectedBlockMaterial;
-	    	}
-	    	
-	    	Material exhaustedBlockMaterial = Material.getMaterial(exhaustedBlockString);
-	    	if(exhaustedBlockMaterial != null) {
-	    		blight.exhaustedBlockMaterial = exhaustedBlockMaterial;
-	    	}
-	    	
-	    	blight.maximumActiveBlocks = maximumActiveBlocksCap;
-	    	blight.infectionProbability = infectionProbability;
+	    	blight = new Blight(includedMaterials, infectableFaces, infectedBlockString,
+	    			exhaustedBlockString, maximumActiveBlocksCap, infectionProbability);
 	    	
 	        // Register our events
 	        PluginManager pm = getServer().getPluginManager();

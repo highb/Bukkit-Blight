@@ -21,22 +21,52 @@ public class Blight implements Runnable, Serializable {
 	private final ArrayList<Block> activeBlightBlocks = new ArrayList<Block>();
 	private Logger log = Logger.getLogger("minecraft");
 	private Random rand = new Random();
-	private BlockFace[] faces = {
-			BlockFace.NORTH, 
-			BlockFace.EAST, 
-			BlockFace.SOUTH, 
-			BlockFace.WEST, 
-			BlockFace.DOWN, 
-			BlockFace.UP,
-			BlockFace.NORTH_EAST,
-			BlockFace.NORTH_WEST,
-			BlockFace.SOUTH_EAST,
-			BlockFace.SOUTH_WEST};
+	public ArrayList<BlockFace> faces = new ArrayList<BlockFace>();
 	public ArrayList<Material> includedList = new ArrayList<Material>();
 	public Material infectedBlockMaterial = Material.SPONGE;
 	public Material exhaustedBlockMaterial = Material.NETHERRACK;
 	public int maximumActiveBlocks = 100;
 	public int infectionProbability = 40;
+	
+	public Blight(String includedMaterials, String infectableFaces, String infectedBlock, String exhaustedBlock, int maximumActiveBlocks, int infectionProbability) {
+		String[] includedMaterialsArray = includedMaterials.split(",");
+    	for(String matString : includedMaterialsArray) {
+			Material materialToAdd = Material.getMaterial(matString.toUpperCase());
+			if(materialToAdd != null) {
+				includedList.add(materialToAdd);
+			}
+			else {
+				log.warning("Blight: Material name " + matString + " provided in config file was invalid. Check that it exists in the list here: http://jd.bukkit.org/apidocs/org/bukkit/Material.html");
+			}
+    	}
+    	
+    	String[] infectableFacesArray = infectableFaces.split(",");
+    	for(String faceString : infectableFacesArray) {
+			try {
+				BlockFace faceToAdd = BlockFace.valueOf(faceString);
+				faces.add(faceToAdd);
+			}
+			catch(IllegalArgumentException ex) {
+				log.warning("Blight: Face name " + faceString + " provided in config file was invalid. Check that it exists in the list here: http://jd.bukkit.org/apidocs/org/bukkit/block/BlockFace.html");
+			}
+			catch(NullPointerException ex) {
+				
+			}
+    	}
+    	
+    	Material infectedBlockMaterial = Material.getMaterial(infectedBlock);
+    	if(infectedBlockMaterial != null) {
+    		this.infectedBlockMaterial = infectedBlockMaterial;
+    	}
+    	
+    	Material exhaustedBlockMaterial = Material.getMaterial(exhaustedBlock);
+    	if(exhaustedBlockMaterial != null) {
+    		this.exhaustedBlockMaterial = exhaustedBlockMaterial;
+    	}
+    	
+    	this.maximumActiveBlocks = maximumActiveBlocks;
+    	this.infectionProbability = infectionProbability;
+	}
 	
     public void advanceBlight() {
     	clampActiveBlightBlocks(maximumActiveBlocks);
