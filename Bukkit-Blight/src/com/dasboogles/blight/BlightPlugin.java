@@ -10,6 +10,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.logging.Logger;
 
+import org.bukkit.Material;
 import org.bukkit.block.Block;
 import org.bukkit.entity.Player;
 import org.bukkit.event.Event.Priority;
@@ -62,10 +63,23 @@ public class BlightPlugin extends JavaPlugin {
 	        // TODO: Place any custom enable code here including the registration of any events
 	    	// Setup config
 	    	CONFIG = getConfiguration();
-	    	CONFIG.setProperty("enabled", true);
+	    	String includedMaterials = CONFIG.getString("included", "" + Material.DIRT.toString() + "," + Material.GRASS.toString() + "," + Material.WOOD.toString());
 	    	CONFIG.save();
-
+	    	
 	    	blight = new Blight();
+	    	
+	    	String[] includedMaterialsArray = includedMaterials.split(",");
+	    	for(String matString : includedMaterialsArray) {
+    			Material materialToAdd = Material.getMaterial(matString.toUpperCase());
+    			if(materialToAdd != null) {
+    				blight.includedList.add(materialToAdd);
+    			}
+    			else {
+    				log.warning("Blight: Material name " + matString + " provided in config file was invalid. Check that it exists in the list here: http://jd.bukkit.org/apidocs/org/bukkit/Material.html");
+    			}
+	    	}
+
+	    	
 	    	
 	        // Register our events
 	        PluginManager pm = getServer().getPluginManager();
