@@ -33,9 +33,13 @@ public class Blight implements Runnable, Serializable {
 			BlockFace.SOUTH_EAST,
 			BlockFace.SOUTH_WEST};
 	public ArrayList<Material> includedList = new ArrayList<Material>();
+	public Material infectedBlockMaterial = Material.SPONGE;
+	public Material exhaustedBlockMaterial = Material.NETHERRACK;
+	public int maximumActiveBlocks = 100;
+	public int infectionProbability = 40;
 	
     public void advanceBlight() {
-    	clampActiveBlightBlocks(10000);
+    	clampActiveBlightBlocks(maximumActiveBlocks);
     	
     	ArrayList<Block> blightBlocks = new ArrayList<Block>(activeBlightBlocks.size());
     	blightBlocks.addAll(activeBlightBlocks);
@@ -49,7 +53,7 @@ public class Blight implements Runnable, Serializable {
     			if(face != BlockFace.SELF) {
     				Block otherBlock = blightBlocks.get(blightBlock).getRelative(face);
         			if(includedList.contains(otherBlock.getType()) 
-        					&& rand.nextInt(100) < 40) {
+        					&& rand.nextInt(100) < infectionProbability) {
         				this.infectBlock(otherBlock);
         			}	
     			}
@@ -59,12 +63,12 @@ public class Blight implements Runnable, Serializable {
     }
     
     public void infectBlock(Block block) {
-    	block.setType(Material.SPONGE);
+    	block.setType(infectedBlockMaterial);
     	activeBlightBlocks.add(block);
     }
     
     public void exhaustBlock(Block block) {
-    	block.setType(Material.LAVA);
+    	block.setType(exhaustedBlockMaterial);
     	activeBlightBlocks.remove(block);
     }
     
