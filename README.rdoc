@@ -1,6 +1,9 @@
 = Bukkit-Blight
 
 == DESCRIPTION
+
+WARNING: This is probably horribly broken in the newest version of Bukkit, whatever that is these days.
+
 Bukkit-Blight is a Bukkit plugin for Minecraft that creates a user-configurable blight upon the land!
 
 == INSTALLATION
